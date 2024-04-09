@@ -1,7 +1,9 @@
 import requests
 import selectorlib
 import os
-import smtplib, ssl
+import smtplib
+import ssl
+import time
 
 URL = "http://programmer100.pythonanywhere.com/tours/"
 HEADERS = {
@@ -55,20 +57,25 @@ From: lhanco@gmail.com
         server.login(username, password)
         server.sendmail(username, receiver, message)
 
+    print("Email was sent!")
+
 
 if __name__ == "__main__":
-    scraped = scrape(URL)
-    extracted = extract(scraped)
-    print(extracted)
+    while True:
+        scraped = scrape(URL)
+        extracted = extract(scraped)
+        print(extracted)
 
-    if not os.path.exists(OUTPUT_PATH):
-        with open(OUTPUT_PATH, "w") as file:
-            pass
+        if not os.path.exists(OUTPUT_PATH):
+            with open(OUTPUT_PATH, "w") as file:
+                pass
 
-    content = read()
+        content = read()
 
-    if extracted != "No upcoming tours":
-        if extracted not in content:
-            store(extracted)
+        if extracted != "No upcoming tours":
+            if extracted not in content:
+                store(extracted)
 
-            send_email(raw_message="Hey, new event was found.\n\n" + extracted)
+                send_email(raw_message="Hey, new event was found.\n\n" + extracted)
+
+        time.sleep(5)
